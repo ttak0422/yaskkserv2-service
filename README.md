@@ -1,0 +1,2 @@
+# yaskkserv2-service
+Nixユーザがyaskkserv2を導入するための何か
