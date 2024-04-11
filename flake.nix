@@ -20,7 +20,7 @@
 
   outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (_: {
-      systems = [ "aarch64-linux" "aarch64-darwin" ];
+      systems = [ "x86_64-darwin" "aarch64-darwin" ];
       perSystem = { system, pkgs, lib, ... }:
         let
           inherit (pkgs.lib) optionals;
