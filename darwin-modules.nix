@@ -76,7 +76,7 @@ in {
   config = lib.mkIf cfg.enable {
     launchd.user.agents.yaskkserv2 = {
       script = concatStringsSep " " [
-        "${lib.getBin cfg.package}/bin/yaskkserv4 "
+        "${lib.getBin cfg.package}/bin/yaskkserv2"
         cfg.dictionary
         "--no-daemonize"
         "--port ${toString cfg.port}"
