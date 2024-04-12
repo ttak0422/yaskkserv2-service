@@ -48,7 +48,7 @@
         in {
           _module.args.pkgs = import inputs.nixpkgs {
             inherit system;
-            overlays = with inputs; [ inputs.fenix.overlays.default ];
+            overlays = [ inputs.fenix.overlays.default ];
           };
           packages.yaskkserv2 = yaskkserv2.package;
           apps = {
