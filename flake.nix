@@ -20,11 +20,12 @@
 
   outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (_: {
-      systems = [ "x86_64-darwin" "aarch64-darwin" ];
+      systems =
+        [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       perSystem = { system, pkgs, lib, ... }:
         let
           inherit (pkgs.lib) optionals;
-          inherit (pkgs.stdenv) isDarwin;
+          inherit (pkgs.stdenv) isLinux isDarwin;
           toolchain = pkgs.fenix.stable.defaultToolchain;
           craneLib = inputs.crane.lib.${system}.overrideToolchain toolchain;
           yaskkserv2 = with craneLib; rec {
@@ -33,13 +34,14 @@
               # skip test
               checkPhaseCargoCommand = "";
               buildInputs = with pkgs;
-                [ pkg-config libiconv ] ++ (optionals isDarwin
-                  (with pkgs.darwin.apple_sdk; [
-                    frameworks.Security
-                    frameworks.CoreFoundation
-                    frameworks.CoreServices
-                    frameworks.SystemConfiguration
-                  ]));
+                [ pkg-config libiconv ]
+                ++ (optionals isLinux (with pkgs; [ openssl.dev ]))
+                ++ (optionals isDarwin (with pkgs.darwin.apple_sdk; [
+                  frameworks.Security
+                  frameworks.CoreFoundation
+                  frameworks.CoreServices
+                  frameworks.SystemConfiguration
+                ]));
             };
             artifacts = buildDepsOnly (commonArgs // { pname = "yaskkserv2"; });
             package =
@@ -64,5 +66,6 @@
         };
     }) // {
       darwinModules.default = import ./darwin-modules.nix self;
+      nixosModules.default = import ./nixos-modules.nix self;
     };
 }
