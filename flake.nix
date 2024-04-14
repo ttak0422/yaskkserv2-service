@@ -65,7 +65,7 @@
           };
         };
     }) // {
-      darwinModules.default = import ./darwin-modules.nix self;
-      nixosModules.default = import ./nixos-modules.nix self;
+      darwinModules.default = import ./modules/darwin-modules.nix self;
+      nixosModules.default = import ./modules/nixos-modules.nix self;
     };
 }
