@@ -122,11 +122,11 @@
     "yaskkserv2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1711623260,
-        "narHash": "sha256-oXdgSEJVDnsuz9RHbDZSK/pL5aep10ypLxZZ4EdfObU=",
+        "lastModified": 1737173957,
+        "narHash": "sha256-NTxbISgzAmpOf/nZ/GXQsbgOSJ27D3eubbmYj9jv9ck=",
         "owner": "wachikun",
         "repo": "yaskkserv2",
-        "rev": "7d93cfd95825bc983004e5e80b1a35fe6318bf62",
+        "rev": "ef612acdc1b8d70fef60f91b66333fc865c034d1",
         "type": "github"
       },
       "original": {
