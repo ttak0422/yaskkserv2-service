@@ -12,36 +12,28 @@
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    crane = {
-      url = "github:ipetkov/crane";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    crane.url = "github:ipetkov/crane";
   };
 
   outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } (_: {
       systems =
         [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-      perSystem = { system, pkgs, lib, ... }:
+      perSystem = { system, pkgs, ... }:
         let
           inherit (pkgs.lib) optionals;
           inherit (pkgs.stdenv) isLinux isDarwin;
           toolchain = pkgs.fenix.stable.defaultToolchain;
-          craneLib = inputs.crane.lib.${system}.overrideToolchain toolchain;
+          craneLib = (inputs.crane.mkLib pkgs).overrideToolchain toolchain;
           yaskkserv2 = with craneLib; rec {
             commonArgs = {
-              src = cleanCargoSource (path "${inputs.yaskkserv2-src}");
+              src = cleanCargoSource inputs.yaskkserv2-src;
               # skip test
               checkPhaseCargoCommand = "";
               buildInputs = with pkgs;
                 [ pkg-config libiconv ]
                 ++ (optionals isLinux (with pkgs; [ openssl.dev ]))
-                ++ (optionals isDarwin (with pkgs.darwin.apple_sdk; [
-                  frameworks.Security
-                  frameworks.CoreFoundation
-                  frameworks.CoreServices
-                  frameworks.SystemConfiguration
-                ]));
+                ++ (optionals isDarwin (with pkgs; [ apple-sdk ]));
             };
             artifacts = buildDepsOnly (commonArgs // { pname = "yaskkserv2"; });
             package =
