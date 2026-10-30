@@ -28,6 +28,12 @@
           yaskkserv2 = with craneLib; rec {
             commonArgs = {
               src = cleanCargoSource inputs.yaskkserv2-src;
+              # Upstream bumped Cargo.toml to 0.1.8 without updating its lock entry.
+              postPatch = ''
+                substituteInPlace Cargo.lock \
+                  --replace-fail $'name = "yaskkserv2"\nversion = "0.1.7"' \
+                                 $'name = "yaskkserv2"\nversion = "0.1.8"'
+              '';
               # skip test
               checkPhaseCargoCommand = "";
               buildInputs = with pkgs;
